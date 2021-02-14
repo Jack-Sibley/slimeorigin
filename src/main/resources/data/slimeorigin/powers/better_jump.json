@@ -1,0 +1,10 @@
+{
+  "type": "origins:modify_jump",
+  "modifier": {
+    "name": "Slime Better Jump",
+    "value": 0.25,
+    "operation": "multiply_base"
+    },
+  "name": "Improved Jump",
+  "description": "Your slime heritage gives you an improved leap."
+}

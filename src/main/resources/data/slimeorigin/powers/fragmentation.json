@@ -1,0 +1,21 @@
+{
+  "type": "origins:action_on_callback",
+  "entity_action_chosen": {
+    "type": "origins:execute_command",
+    "command": "attribute @s slimeorigin:slime_size base set 3",
+    "permission_level": 4
+  },
+  "entity_action_removed": {
+    "type": "origins:execute_command",
+    "command": "attribute @s slimeorigin:slime_size base set 0",
+    "permission_level": 4
+  },
+  "entity_action_respawned": {
+    "type": "origins:execute_command",
+    "command": "attribute @s slimeorigin:slime_size base set 3",
+    "permission_level": 4
+  },
+  "execute_chosen_when_orb": true,
+  "name": "Fragmentation",
+  "description": "When others would die, you shrink to half your size. (Twice per life)"
+}

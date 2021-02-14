@@ -1,0 +1,9 @@
+{
+  "type": "origins:model_color",
+  "alpha": 0.75,
+  "red": 0.25,
+  "green": 0.75,
+  "blue": 0.25,
+  "name": "Slimy Skin",
+  "description": "You have the green translucent skin of a slime."
+}
