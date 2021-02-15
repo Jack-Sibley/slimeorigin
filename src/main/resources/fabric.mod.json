@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "id": "slimeorigin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "name": "Slimeorigin",
   "description": "",
   "authors": [],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/slimeorigin/icon.png",
+  "icon": "assets/slimeorigin/icon128.png",
   "environment": "*",
   "entrypoints": {
     "client": [
