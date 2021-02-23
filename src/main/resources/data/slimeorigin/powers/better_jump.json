@@ -6,5 +6,5 @@
     "operation": "multiply_base"
     },
   "name": "Improved Jump",
-  "description": "Your slime heritage gives you an improved leap."
+  "description": "Your slime heritage gives you an improved leap at the cost of a reduced movement speed."
 }

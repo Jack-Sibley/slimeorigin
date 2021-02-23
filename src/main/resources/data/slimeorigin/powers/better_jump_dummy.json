@@ -1,0 +1,10 @@
+{
+  "type": "origins:attribute",
+  "modifier": {
+    "name": "Slime Weaker Run",
+    "attribute": "minecraft:generic.movement_speed",
+    "value": -0.25,
+    "operation": "multiply_base"
+  },
+  "hidden": true
+}
