@@ -1,0 +1,18 @@
+{
+  "type": "origins:burn",
+  "interval": 20,
+  "burn_duration": 6,
+  "condition": {
+    "type": "origins:and",
+    "conditions": [
+      {
+        "type": "slimeorigin:temperature",
+        "comparison": ">",
+        "compare_to": 1.0
+      },
+      {
+        "type": "origins:exposed_to_sun"
+      }
+    ]
+  }
+}

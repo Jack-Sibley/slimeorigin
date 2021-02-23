@@ -6,7 +6,8 @@
     "slimeorigin:fragmentation",
     "slimeorigin:fragmentation_dummy",
     "slimeorigin:slime_skin",
-    "origins:more_exhaustion"
+    "origins:more_exhaustion",
+    "slimeorigin:melting"
 
   ],
   "icon": "minecraft:slime_ball",
