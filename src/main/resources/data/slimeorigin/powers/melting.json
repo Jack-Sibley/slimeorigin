@@ -14,5 +14,7 @@
         "type": "origins:exposed_to_sun"
       }
     ]
-  }
+  },
+  "name": "Melting",
+  "description": "Slime doesn't last very long in hot weather; you will burn when exposed to the sun in hot biomes."
 }
