@@ -10,7 +10,10 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -65,10 +68,17 @@ public abstract class MixinLivingEntity extends Entity {
         }
         else {
             if (Slimeorigin.FRAGMENTATION.isActive(this)) {
+
                 int flooredSlime = (int) floor(this.attributes.getValue(SLIME_SIZE));
+                if (flooredSlime == 0)
+                {
+                    this.getAttributeInstance(SLIME_SIZE).setBaseValue(3.0d);
+                    flooredSlime = (int) floor(this.attributes.getValue(SLIME_SIZE));
+                }
+
+                this.sendSystemMessage(new LiteralText("Current Slime Val: " + flooredSlime), Util.NIL_UUID);
                 if (flooredSlime > 1) {
                     this.getAttributeInstance(SLIME_SIZE).setBaseValue(flooredSlime - 1.0d);
-                    System.out.println("New Value Set");
                     EntityAttributeModifier modifier = new EntityAttributeModifier(
                             String.format("FragmentationHealthDummy%d",flooredSlime),
                             -pow(2, flooredSlime),
@@ -83,8 +93,8 @@ public abstract class MixinLivingEntity extends Entity {
                     this.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 40, 5));
                     this.addStatusEffect(new StatusEffectInstance(StatusEffects.ABSORPTION, 100, 1));
 
-                    ScaleType.HEIGHT.getScaleData(this).setScale(ScaleType.BASE.getScaleData(this).getScale()/2);
-                    ScaleType.WIDTH.getScaleData(this).setScale(ScaleType.MOTION.getScaleData(this).getScale()/2);
+                    ScaleType.HEIGHT.getScaleData(this).setScale(ScaleType.HEIGHT.getScaleData(this).getScale()/2);
+                    ScaleType.WIDTH.getScaleData(this).setScale(ScaleType.WIDTH.getScaleData(this).getScale()/2);
 
                     cir.setReturnValue(true);
                     cir.cancel();
@@ -99,6 +109,7 @@ public abstract class MixinLivingEntity extends Entity {
                                     this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)
                                     .tryRemoveModifier(x.getId())
                             );
+
                 }
             }
         }
