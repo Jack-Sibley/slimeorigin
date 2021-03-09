@@ -1,6 +1,8 @@
 package dev.jacksibley.slimeorigin.mixin;
 
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import dev.jacksibley.slimeorigin.Slimeorigin;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -23,11 +25,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import sun.tools.jstat.Scale;
+import virtuoel.pehkui.api.PehkuiConfig;
 import virtuoel.pehkui.api.ScaleType;
 //import virtuoel.pehkui.api.ScaleData;
 //import virtuoel.pehkui.api.ScaleType;
 //import virtuoel.pehkui.entity.ResizableEntity;
 //import virtuoel.pehkui.util.ScaleUtils;
+
+import java.util.Optional;
 
 import static dev.jacksibley.slimeorigin.Slimeorigin.FRAGMENTATION;
 import static dev.jacksibley.slimeorigin.Slimeorigin.SLIME_SIZE;
@@ -61,14 +66,33 @@ public abstract class MixinLivingEntity extends Entity {
         builder.getReturnValue().add(SLIME_SIZE);
     }
 
+    private void revertScale()
+    {
+        if (Optional.ofNullable(PehkuiConfig.DATA.get("keepScaleOnRespawn"))
+            .filter(JsonElement::isJsonPrimitive).map(JsonElement::getAsJsonPrimitive)
+            .filter(JsonPrimitive::isBoolean).map(JsonPrimitive::getAsBoolean)
+            .orElse(false)) {
+                int flooredSlime = (int) floor(this.attributes.getValue(SLIME_SIZE));
+                if (flooredSlime != 0)
+                {
+                    ScaleType.HEIGHT.getScaleData(this).setScale(ScaleType.HEIGHT.getScaleData(this).getScale() * 2 * (3 - flooredSlime));
+                    ScaleType.WIDTH.getScaleData(this).setScale(ScaleType.WIDTH.getScaleData(this).getScale() * 2 * (3 - flooredSlime));
+                }
+        }
+    }
+
     @Inject(method = "tryUseTotem", at=@At("HEAD"), cancellable = true)
     private void tryUseTotem(DamageSource source, CallbackInfoReturnable<Boolean> cir) {
         if (source.isOutOfWorld()) {
+
+            if (Slimeorigin.FRAGMENTATION.isActive(this)) {
+                revertScale();
+            }
+
             cir.setReturnValue(false);
         }
         else {
             if (Slimeorigin.FRAGMENTATION.isActive(this)) {
-
                 int flooredSlime = (int) floor(this.attributes.getValue(SLIME_SIZE));
                 if (flooredSlime == 0)
                 {
@@ -76,7 +100,6 @@ public abstract class MixinLivingEntity extends Entity {
                     flooredSlime = (int) floor(this.attributes.getValue(SLIME_SIZE));
                 }
 
-                this.sendSystemMessage(new LiteralText("Current Slime Val: " + flooredSlime), Util.NIL_UUID);
                 if (flooredSlime > 1) {
                     this.getAttributeInstance(SLIME_SIZE).setBaseValue(flooredSlime - 1.0d);
                     EntityAttributeModifier modifier = new EntityAttributeModifier(
@@ -109,6 +132,8 @@ public abstract class MixinLivingEntity extends Entity {
                                     this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)
                                     .tryRemoveModifier(x.getId())
                             );
+
+                    revertScale();
 
                 }
             }
