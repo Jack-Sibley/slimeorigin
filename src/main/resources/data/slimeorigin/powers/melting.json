@@ -6,9 +6,13 @@
     "type": "origins:and",
     "conditions": [
       {
-        "type": "slimeorigin:temperature",
-        "comparison": ">",
-        "compare_to": 1.0
+        "type": "origins:biome",
+        "condition":
+        {
+          "type": "origins:temperature",
+          "comparison": ">",
+          "compare_to": 1.0
+        }
       },
       {
         "type": "origins:exposed_to_sun"

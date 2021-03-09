@@ -27,7 +27,10 @@ repositories {
     maven {
         url = "https://maven.jamieswhiteshirt.com/libs-release/"
     }
-    jcenter()
+    maven {
+        name = "cloth config"
+        url = "https://maven.shedaniel.me/"
+    }
 }
 
 dependencies {
