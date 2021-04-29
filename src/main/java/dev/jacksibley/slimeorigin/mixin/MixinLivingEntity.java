@@ -1,8 +1,5 @@
 package dev.jacksibley.slimeorigin.mixin;
 
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import dev.jacksibley.slimeorigin.Slimeorigin;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -68,10 +65,8 @@ public abstract class MixinLivingEntity extends Entity {
 
     private void revertScale()
     {
-        if (Optional.ofNullable(PehkuiConfig.DATA.get("keepScaleOnRespawn"))
-            .filter(JsonElement::isJsonPrimitive).map(JsonElement::getAsJsonPrimitive)
-            .filter(JsonPrimitive::isBoolean).map(JsonPrimitive::getAsBoolean)
-            .orElse(false)) {
+        PehkuiConfig pehconf = new PehkuiConfig();
+        if ((Boolean)Optional.ofNullable((Boolean)PehkuiConfig.COMMON.keepAllScalesOnRespawn.get()).orElse(false)) {
                 int flooredSlime = (int) floor(this.attributes.getValue(SLIME_SIZE));
                 if (flooredSlime != 0)
                 {
