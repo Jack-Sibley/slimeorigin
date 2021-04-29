@@ -39,16 +39,11 @@ import static java.lang.Math.pow;
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity {
 
-    @Shadow @Final private AttributeContainer attributes;
-
     @Shadow @Nullable public abstract EntityAttributeInstance getAttributeInstance(EntityAttribute attribute);
 
     @Shadow public abstract void setHealth(float health);
 
     @Shadow public abstract boolean clearStatusEffects();
-
-
-    @Shadow public abstract float getMaxHealth();
 
     @Shadow public abstract boolean addStatusEffect(StatusEffectInstance effect);
 
@@ -56,18 +51,17 @@ public abstract class MixinLivingEntity extends Entity {
         super(type, world);
     }
 
-    //private static final ScaleType type = ScaleType.WIDTH;
-
-    @Inject(method = "createLivingAttributes", at=@At("RETURN"))
-    private static void createLivingAttributes(CallbackInfoReturnable<DefaultAttributeContainer.Builder> builder) {
-        builder.getReturnValue().add(SLIME_SIZE);
+    @Inject(method = "createLivingAttributes()Lnet/minecraft/entity/attribute/DefaultAttributeContainer$Builder;", require = 1, allow = 1, at = @At("RETURN"))
+    private static void addAttributes(final CallbackInfoReturnable<DefaultAttributeContainer.Builder> info) {
+        final DefaultAttributeContainer.Builder builder = info.getReturnValue();
+        builder.add(SLIME_SIZE);
     }
 
     private void revertScale()
     {
         PehkuiConfig pehconf = new PehkuiConfig();
         if ((Boolean)Optional.ofNullable((Boolean)PehkuiConfig.COMMON.keepAllScalesOnRespawn.get()).orElse(false)) {
-                int flooredSlime = (int) floor(this.attributes.getValue(SLIME_SIZE));
+                int flooredSlime = (int) floor(this.getAttributeInstance(SLIME_SIZE).getValue());
                 if (flooredSlime != 0)
                 {
                     ScaleType.HEIGHT.getScaleData(this).setScale(ScaleType.HEIGHT.getScaleData(this).getScale() * 2 * (3 - flooredSlime));
@@ -88,23 +82,30 @@ public abstract class MixinLivingEntity extends Entity {
         }
         else {
             if (Slimeorigin.FRAGMENTATION.isActive(this)) {
-                int flooredSlime = (int) floor(this.attributes.getValue(SLIME_SIZE));
+                int flooredSlime = (int) floor(this.getAttributeInstance(SLIME_SIZE).getValue());
                 if (flooredSlime == 0)
                 {
-                    this.getAttributeInstance(SLIME_SIZE).setBaseValue(3.0d);
-                    flooredSlime = (int) floor(this.attributes.getValue(SLIME_SIZE));
+                    flooredSlime = (int) floor(this.getAttributeInstance(SLIME_SIZE).getValue());
                 }
 
                 if (flooredSlime > 1) {
-                    this.getAttributeInstance(SLIME_SIZE).setBaseValue(flooredSlime - 1.0d);
-                    EntityAttributeModifier modifier = new EntityAttributeModifier(
+                    EntityAttributeModifier SizeModifier = new EntityAttributeModifier(
+                            String.format("FragmentationSize%d",flooredSlime),
+                            -1,
+                            EntityAttributeModifier.Operation.ADDITION
+                    );
+
+                    this.getAttributeInstance(SLIME_SIZE).addPersistentModifier(SizeModifier);
+
+                    EntityAttributeModifier HealthModifier = new EntityAttributeModifier(
                             String.format("FragmentationHealthDummy%d",flooredSlime),
                             -pow(2, flooredSlime),
                             EntityAttributeModifier.Operation.ADDITION
                     );
 
 
-                    this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).addPersistentModifier(modifier);
+
+                    this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).addPersistentModifier(HealthModifier);
                     this.setHealth(1.0F);
                     this.clearStatusEffects();
                     this.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 100, 2));
@@ -126,6 +127,15 @@ public abstract class MixinLivingEntity extends Entity {
                             .forEach(x ->
                                     this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)
                                     .tryRemoveModifier(x.getId())
+                            );
+
+                    this.getAttributeInstance(SLIME_SIZE)
+                            .getModifiers()
+                            .stream()
+                            .filter(x -> x.getName().contains("FragmentationSize"))
+                            .forEach(x ->
+                                    this.getAttributeInstance(SLIME_SIZE)
+                                            .tryRemoveModifier(x.getId())
                             );
 
                     revertScale();
