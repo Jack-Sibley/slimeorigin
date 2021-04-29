@@ -40,7 +40,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     modImplementation "com.github.apace100:origins-fabric:${project.origins_version}"
-    modImplementation 'com.github.Virtuoel:Pehkui:1.17-SNAPSHOT'
+    modImplementation 'com.github.Virtuoel:Pehkui:2.0.0'
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
