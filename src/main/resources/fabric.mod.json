@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "slimeorigin",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "name": "Slimeorigin",
   "description": "",
   "authors": [],
@@ -23,6 +23,6 @@
   "depends": {
     "fabricloader": ">=0.11.1",
     "fabric": "*",
-    "minecraft": "1.16.x"
+    "minecraft": "1.17.x"
   }
 }

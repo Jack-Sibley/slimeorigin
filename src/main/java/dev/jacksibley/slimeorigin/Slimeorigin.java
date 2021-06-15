@@ -1,8 +1,8 @@
 package dev.jacksibley.slimeorigin;
 
-import io.github.apace100.origins.power.Power;
-import io.github.apace100.origins.power.PowerType;
-import io.github.apace100.origins.power.PowerTypeReference;
+import io.github.apace100.apoli.power.Power;
+import io.github.apace100.apoli.power.PowerType;
+import io.github.apace100.apoli.power.PowerTypeReference;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;

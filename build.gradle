@@ -1,10 +1,10 @@
 plugins {
-    id 'fabric-loom' version '0.6-SNAPSHOT'
+    id 'fabric-loom' version '0.8-SNAPSHOT'
     id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -16,6 +16,7 @@ repositories {
     maven {
         url 'http://maven.fabricmc.net/'
         name 'Fabric'
+        allowInsecureProtocol = true
     }
     maven {
         url 'https://jitpack.io'
@@ -31,6 +32,18 @@ repositories {
         name = "cloth config"
         url = "https://maven.shedaniel.me/"
     }
+    maven {
+        name "mod menu"
+        url "https://maven.terraformersmc.com/"
+    }
+    maven {
+        name "fall flying lib"
+        url "https://maven.cafeteria.dev"
+    }
+    maven {
+        name = 'Ladysnake Mods'
+        url = 'https://ladysnake.jfrog.io/artifactory/mods'
+    }
 }
 
 dependencies {
@@ -40,10 +53,11 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     modImplementation "com.github.apace100:origins-fabric:${project.origins_version}"
-    modImplementation 'com.github.Virtuoel:Pehkui:2.0.0'
+    modImplementation("com.github.virtuoel:pehkui:${pehkui_version}")
 
-    // Fabric API. This is technically optional, but you probably want it anyway.
+            // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
 }
@@ -52,13 +66,8 @@ dependencies {
 processResources {
     inputs.property "version", project.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
+    filesMatching("fabric.mod.json") {
         expand "version": project.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
     }
 }
 

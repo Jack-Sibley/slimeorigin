@@ -1,7 +1,7 @@
 package dev.jacksibley.slimeorigin.mixin;
 
 import dev.jacksibley.slimeorigin.Slimeorigin;
-import io.github.apace100.origins.power.PowerTypeReference;
+import io.github.apace100.apoli.power.PowerTypeReference;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlimeBlock;
